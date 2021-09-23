@@ -18,6 +18,7 @@ from ..exceptions import (
 from ..repo.scm_context import scm_context
 from ..utils import LARGE_DIR_SIZE, glob_targets, resolve_output, resolve_paths
 from ..utils.collections import ensure_list, validate
+from ..utils.hdf5 import get_external_links
 from . import locked
 
 if TYPE_CHECKING:
@@ -237,6 +238,8 @@ def _find_all_targets(
             if not repo.scm.belongs_to_scm(path)
             if not repo.scm.is_tracked(path)
         )
+    elif (target.find(".h5") != -1):
+        yield from get_external_links(target)
     else:
         yield target
 
